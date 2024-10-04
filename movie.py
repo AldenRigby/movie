@@ -27,11 +27,10 @@ Braveheart, (1995), Mel Gibson, R, Biography, [Mel Gibson, Sophie Marceau, Patri
 The Terminator, (1984), James Cameron, R, Sci-Fi, [Arnold Schwarzenegger, Linda Hamilton, Michael Biehn]
 Back to the Future, (1985), Robert Zemeckis, PG, Adventure, [Michael J. Fox, Christopher Lloyd, Lea Thompson]
 Alien, (1979), Ridley Scott, R, Horror, [Sigourney Weaver, Tom Skerritt, John Hurt]
-The Truman Show, (1998), Peter Weir, PG, Drama, [Jim Carrey, Laura Linney, Noah Emmerich]"""
-moviesData = []
-moviesObjects = []
-
-class Movie():
+The Truman Show, (1998), Peter Weir, PG, Drama, [Jim Carrey, Laura Linney, Noah Emmerich]""".split("\n")
+moviesData = movies.copy() #make sure it's the same length as movies.
+moviesObjects = [] #where all the objects will be stored
+class Movie(): #class !
     #initialize all
     def __init__(self, title, year, director, rating, genre, cast):
         self.title = title
@@ -40,101 +39,62 @@ class Movie():
         self.rating = rating
         self.genre = genre
         self.cast = cast
-    
     #print everything in a nice format
     def __str__(self):
         return f"{self.title} ({str(self.year)})\n    Directed by {self.director}, rated {self.rating}. {self.genre}\n    Featuring {self.cast}"
-    
-    #sort using lambda pretty easy
+    #sort using lambda, pretty easy
     def sortYear(self):
         moviesObjects.sort(key=lambda x: x.year)
         print("Sorted successfully.\n")
-
     def sortName(self):
         moviesObjects.sort(key=lambda x: x.title)
         print("Sorted successfully.\n")
-
     #only show everything that contains the substring for all searches. really simple
-    def searchGenre(self):
+    def search(self, type):
         userInput = input("What is your search term? ").upper()
         found = False
         for i in range(len(moviesObjects)):
-            if userInput in moviesObjects[i].genre.upper():
-                found = True
-                print(moviesObjects[i])
+            if type == "genre":
+                if userInput in moviesObjects[i].genre.upper():
+                    found = True
+                    print(moviesObjects[i])
+            if type == "director":
+                if userInput in moviesObjects[i].director.upper():
+                    found = True
+                    print(moviesObjects[i])
+            if type == "cast":
+                if userInput in moviesObjects[i].cast.upper():
+                    found = True
+                    print(moviesObjects[i])
         if not found:
             print("No movies found.")
         print("")
-
-    def searchDirector(self):
-        userInput = input("What is your search term? ").upper()
-        found = False
-        for i in range(len(moviesObjects)):
-            if userInput in moviesObjects[i].director.upper():
-                found = True
-                print(moviesObjects[i])
-        if not found:
-            print("No movies found.")
-        print("")
-
-    def searchCast(self):
-        userInput = input("What is your search term? ").upper()
-        found = False
-        for i in range(len(moviesObjects)):
-            if userInput in moviesObjects[i].cast.upper():
-                found = True
-                print(moviesObjects[i])
-        if not found:
-            print("No movies found.")
-        print("")
-
-#this chunk of code takes all of the movie lines and turns it into objects
-movies = movies.split("\n")
-moviesData = movies.copy()
-for i in range(len(moviesData)):
+for i in range(len(moviesData)): #this chunk of code takes all of the movie lines and turns it into objects
     moviesData[i] = []
     #pretty janky. but use the thing to determine what chunk of the line belongs to where
-    moviesData[i].append(movies[i].split(",")[0]) #title
-    moviesData[i].append(int(movies[i].split(",")[1][2:6])) #year
-    moviesData[i].append(movies[i].split(",")[2][1:]) #director
-    moviesData[i].append(movies[i].split(",")[3][1:]) #rating
-    moviesData[i].append(movies[i].split(",")[4][1:]) #genre
-    moviesData[i].append(movies[i].split("[")[1][0:-1]) #cast
+    moviesData[i].extend((movies[i].split(",")[0], int(movies[i].split(",")[1][2:6]), movies[i].split(",")[2][1:], movies[i].split(",")[3][1:], movies[i].split(",")[4][1:], movies[i].split("[")[1][0:-1]))
+    #title, year, director, rating, genre, cast in order
     moviesObjects.append(Movie(*moviesData[i]))
-
-#... print all movies.
-def printMovies():
-    for i in range(len(moviesObjects)):
-        print(moviesObjects[i])
-    print("")
-
-#continue to ask the user stuff
 go = True
-while go:
-    print("What would you like to do?")
-    print("""S - Show all movies
-A - Sort movies alphabetically
-Y - Sort movies by release year
-G - Search genre
-D - Search director
-C - Search cast
-E - Exit program""")
+while go: #continue to ask the user stuff
+    print("What would you like to do?\nS - Show all movies\nA - Sort movies alphabetically\nY - Sort movies by release year\nG - Search genre\nD - Search director\nC - Search cast\nE - Exit program")
     validInputs = ["S","A","Y","G","D","C","E"]
     userInput = input("Input: ").upper()
     print("")
     if userInput in validInputs:
         if userInput == "S":
-            printMovies()
+            for i in range(len(moviesObjects)):
+                print(moviesObjects[i])
         elif userInput == "A":
             moviesObjects[0].sortName()
         elif userInput == "Y":
             moviesObjects[0].sortYear()
         elif userInput == "G":
-            moviesObjects[0].searchGenre()
+            moviesObjects[0].search("genre")
         elif userInput == "D":
-            moviesObjects[0].searchDirector()
+            moviesObjects[0].search("director")
         elif userInput == "C":
-            moviesObjects[0].searchCast()
+            moviesObjects[0].search("cast")
         elif userInput == "E":
             print("You quit the program.")
-            quit()
+            quit() #got it in 100 lines!
