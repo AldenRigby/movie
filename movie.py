@@ -75,8 +75,7 @@ for i in range(len(moviesData)): #this chunk of code takes all of the movie line
     moviesData[i].extend((movies[i].split(",")[0], int(movies[i].split(",")[1][2:6]), movies[i].split(",")[2][1:], movies[i].split(",")[3][1:], movies[i].split(",")[4][1:], movies[i].split("[")[1][0:-1]))
     #title, year, director, rating, genre, cast in order
     moviesObjects.append(Movie(*moviesData[i]))
-go = True
-while go: #continue to ask the user stuff
+while True: #continue to ask the user stuff
     print("What would you like to do?\nS - Show all movies\nA - Sort movies alphabetically\nY - Sort movies by release year\nG - Search genre\nD - Search director\nC - Search cast\nE - Exit program")
     validInputs = ["S","A","Y","G","D","C","E"]
     userInput = input("Input: ").upper()
@@ -85,6 +84,7 @@ while go: #continue to ask the user stuff
         if userInput == "S":
             for i in range(len(moviesObjects)):
                 print(moviesObjects[i])
+            print("")
         elif userInput == "A":
             moviesObjects[0].sortName()
         elif userInput == "Y":
