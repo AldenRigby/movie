@@ -32,6 +32,7 @@ moviesData = []
 moviesObjects = []
 
 class Movie():
+    #initialize all
     def __init__(self, title, year, director, rating, genre, cast):
         self.title = title
         self.year = year
@@ -40,22 +41,100 @@ class Movie():
         self.genre = genre
         self.cast = cast
     
+    #print everything in a nice format
     def __str__(self):
-        return f"{self.title}, ({str(self.year)})\n    {self.director}, {self.rating}, {self.genre}, featuring {self.cast}"
+        return f"{self.title} ({str(self.year)})\n    Directed by {self.director}, rated {self.rating}. {self.genre}\n    Featuring {self.cast}"
+    
+    #sort using lambda pretty easy
+    def sortYear(self):
+        moviesObjects.sort(key=lambda x: x.year)
+        print("Sorted successfully.\n")
 
-def generateMovie(movie):
-    moviesObjects.append(Movie(*movie))
-    print(moviesObjects[i])
+    def sortName(self):
+        moviesObjects.sort(key=lambda x: x.title)
+        print("Sorted successfully.\n")
 
+    #only show everything that contains the substring for all searches. really simple
+    def searchGenre(self):
+        userInput = input("What is your search term? ").upper()
+        found = False
+        for i in range(len(moviesObjects)):
+            if userInput in moviesObjects[i].genre.upper():
+                found = True
+                print(moviesObjects[i])
+        if not found:
+            print("No movies found.")
+        print("")
+
+    def searchDirector(self):
+        userInput = input("What is your search term? ").upper()
+        found = False
+        for i in range(len(moviesObjects)):
+            if userInput in moviesObjects[i].director.upper():
+                found = True
+                print(moviesObjects[i])
+        if not found:
+            print("No movies found.")
+        print("")
+
+    def searchCast(self):
+        userInput = input("What is your search term? ").upper()
+        found = False
+        for i in range(len(moviesObjects)):
+            if userInput in moviesObjects[i].cast.upper():
+                found = True
+                print(moviesObjects[i])
+        if not found:
+            print("No movies found.")
+        print("")
+
+#this chunk of code takes all of the movie lines and turns it into objects
 movies = movies.split("\n")
 moviesData = movies.copy()
 for i in range(len(moviesData)):
     moviesData[i] = []
+    #pretty janky. but use the thing to determine what chunk of the line belongs to where
     moviesData[i].append(movies[i].split(",")[0]) #title
     moviesData[i].append(int(movies[i].split(",")[1][2:6])) #year
     moviesData[i].append(movies[i].split(",")[2][1:]) #director
     moviesData[i].append(movies[i].split(",")[3][1:]) #rating
     moviesData[i].append(movies[i].split(",")[4][1:]) #genre
     moviesData[i].append(movies[i].split("[")[1][0:-1]) #cast
-    #print(movies[i].split(",")[0])
-    generateMovie(moviesData[i])
+    moviesObjects.append(Movie(*moviesData[i]))
+
+#... print all movies.
+def printMovies():
+    for i in range(len(moviesObjects)):
+        print(moviesObjects[i])
+    print("")
+
+#continue to ask the user stuff
+go = True
+while go:
+    print("What would you like to do?")
+    print("""S - Show all movies
+A - Sort movies alphabetically
+Y - Sort movies by release year
+G - Search genre
+D - Search director
+C - Search cast
+E - Exit program""")
+    validInputs = ["S","A","Y","G","D","C","E"]
+    userInput = input("Input: ").upper()
+    print("")
+    if userInput in validInputs:
+        if userInput == "S":
+            printMovies()
+        elif userInput == "A":
+            moviesObjects[0].sortName()
+        elif userInput == "Y":
+            moviesObjects[0].sortYear()
+        elif userInput == "G":
+            moviesObjects[0].searchGenre()
+        elif userInput == "D":
+            moviesObjects[0].searchDirector()
+        elif userInput == "C":
+            moviesObjects[0].searchCast()
+        elif userInput == "E":
+            print("You quit the program.")
+            quit()
